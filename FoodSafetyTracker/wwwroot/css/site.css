@@ -1,0 +1,41 @@
+/* Food Safety Tracker - Custom styles */
+
+body {
+    background-color: #f8f9fa;
+}
+
+.navbar-brand {
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.card {
+    border-radius: 10px;
+}
+
+.display-4 {
+    font-size: 3rem;
+}
+
+.table th {
+    font-weight: 600;
+}
+
+.badge {
+    font-size: 0.85em;
+    padding: 0.4em 0.7em;
+}
+
+/* Dashboard stat cards */
+.card.border-primary { border-width: 2px !important; }
+.card.border-danger  { border-width: 2px !important; }
+.card.border-warning { border-width: 2px !important; }
+
+/* Highlight overdue rows */
+.table-danger td {
+    font-weight: 500;
+}
+
+footer {
+    border-top: 1px solid #dee2e6;
+}

@@ -1,0 +1,26 @@
+@model FoodSafetyTracker.Models.FollowUp
+@{
+    ViewData["Title"] = "Close Follow-Up";
+}
+
+<h1 class="mb-4">✅ Close Follow-Up</h1>
+
+<div class="alert alert-info">
+    You are about to mark this follow-up as <strong>Closed</strong>. Today's date will be recorded as the closed date.
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Inspection</dt>
+    <dd class="col-sm-9">#@Model.InspectionId — @Model.Inspection?.Premises?.Name</dd>
+    <dt class="col-sm-3">Due Date</dt>
+    <dd class="col-sm-9">@Model.DueDate.ToString("dd/MM/yyyy")</dd>
+    <dt class="col-sm-3">Status</dt>
+    <dd class="col-sm-9">@Model.Status</dd>
+</dl>
+
+<form asp-action="Close" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-success">Confirm Close</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>

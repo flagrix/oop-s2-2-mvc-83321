@@ -1,0 +1,46 @@
+@model FoodSafetyTracker.Models.Inspection
+@{
+    ViewData["Title"] = "New Inspection";
+}
+
+<h1 class="mb-4">🔍 New Inspection</h1>
+
+<div class="row">
+    <div class="col-md-6">
+        <form asp-action="Create" method="post">
+            @Html.AntiForgeryToken()
+            <div asp-validation-summary="ModelOnly" class="alert alert-danger"></div>
+
+            <div class="mb-3">
+                <label asp-for="PremisesId" class="form-label">Premises</label>
+                <select asp-for="PremisesId" class="form-select" asp-items="ViewBag.Premises">
+                    <option value="">-- Select Premises --</option>
+                </select>
+                <span asp-validation-for="PremisesId" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="InspectionDate" class="form-label"></label>
+                <input asp-for="InspectionDate" type="date" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                <span asp-validation-for="InspectionDate" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Score" class="form-label">Score (0–100)</label>
+                <input asp-for="Score" type="number" min="0" max="100" class="form-control" />
+                <span asp-validation-for="Score" class="text-danger"></span>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Outcome" class="form-label"></label>
+                <select asp-for="Outcome" asp-items="Html.GetEnumSelectList<FoodSafetyTracker.Models.OutcomeResult>()" class="form-select"></select>
+            </div>
+            <div class="mb-3">
+                <label asp-for="Notes" class="form-label"></label>
+                <textarea asp-for="Notes" class="form-control" rows="3"></textarea>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">Create</button>
+                <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>

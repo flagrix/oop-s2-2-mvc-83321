@@ -1,0 +1,70 @@
+@model FoodSafetyTracker.Models.Premises
+@{
+    ViewData["Title"] = "Premises Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>🏢 @Model.Name</h1>
+    @if (User.IsInRole("Admin"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Edit</a>
+    }
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Address</dt>
+            <dd class="col-sm-9">@Model.Address</dd>
+            <dt class="col-sm-3">Town</dt>
+            <dd class="col-sm-9">@Model.Town</dd>
+            <dt class="col-sm-3">Risk Rating</dt>
+            <dd class="col-sm-9">
+                <span class="badge @(Model.RiskRating == FoodSafetyTracker.Models.RiskRating.High ? "bg-danger" : Model.RiskRating == FoodSafetyTracker.Models.RiskRating.Medium ? "bg-warning text-dark" : "bg-success")">
+                    @Model.RiskRating
+                </span>
+            </dd>
+        </dl>
+    </div>
+</div>
+
+<h3>Inspections</h3>
+@if (Model.Inspections.Any())
+{
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Date</th>
+                <th>Score</th>
+                <th>Outcome</th>
+                <th>Notes</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var i in Model.Inspections.OrderByDescending(x => x.InspectionDate))
+            {
+                <tr>
+                    <td>@i.InspectionDate.ToString("dd/MM/yyyy")</td>
+                    <td>@i.Score</td>
+                    <td>
+                        <span class="badge @(i.Outcome == FoodSafetyTracker.Models.OutcomeResult.Fail ? "bg-danger" : "bg-success")">@i.Outcome</span>
+                    </td>
+                    <td>@i.Notes</td>
+                    <td><a asp-controller="Inspection" asp-action="Details" asp-route-id="@i.Id" class="btn btn-sm btn-outline-primary">View</a></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">No inspections recorded yet.</p>
+}
+
+@if (User.IsInRole("Admin") || User.IsInRole("Inspector"))
+{
+    <a asp-controller="Inspection" asp-action="Create" class="btn btn-success mt-2">+ New Inspection</a>
+}
+
+<a asp-action="Index" class="btn btn-outline-secondary mt-2">Back to List</a>

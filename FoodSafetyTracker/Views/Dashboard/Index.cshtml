@@ -1,0 +1,84 @@
+@model FoodSafetyTracker.Models.DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<h1 class="mb-4">📊 Dashboard</h1>
+
+<!-- Filter Form -->
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="get" asp-action="Index" class="row g-3 align-items-end">
+            <div class="col-md-4">
+                <label class="form-label">Filter by Town</label>
+                <select name="town" class="form-select">
+                    <option value="">All Towns</option>
+                    @foreach (var town in Model.Towns)
+                    {
+                        <option value="@town" selected="@(Model.SelectedTown == town)">@town</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-4">
+                <label class="form-label">Filter by Risk Rating</label>
+                <select name="riskRating" class="form-select">
+                    <option value="">All Ratings</option>
+                    @foreach (var rating in Enum.GetValues<FoodSafetyTracker.Models.RiskRating>())
+                    {
+                        <option value="@((int)rating)" selected="@(Model.SelectedRiskRating == rating)">@rating</option>
+                    }
+                </select>
+            </div>
+            <div class="col-md-2">
+                <button type="submit" class="btn btn-primary w-100">Apply</button>
+            </div>
+            <div class="col-md-2">
+                <a asp-action="Index" class="btn btn-outline-secondary w-100">Reset</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Stats Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-md-4">
+        <div class="card border-primary h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title text-primary">Inspections This Month</h5>
+                <p class="display-4 fw-bold text-primary">@Model.InspectionsThisMonth</p>
+                <p class="text-muted small">Total inspections recorded this month</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-danger h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title text-danger">Failed This Month</h5>
+                <p class="display-4 fw-bold text-danger">@Model.FailedThisMonth</p>
+                <p class="text-muted small">Inspections with a Fail outcome</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card border-warning h-100 shadow-sm">
+            <div class="card-body text-center">
+                <h5 class="card-title text-warning">Overdue Follow-Ups</h5>
+                <p class="display-4 fw-bold text-warning">@Model.OverdueFollowUps</p>
+                <p class="text-muted small">Open follow-ups past their due date</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Links -->
+<div class="row g-3">
+    <div class="col-md-4">
+        <a asp-controller="Premises" asp-action="Index" class="btn btn-outline-dark w-100">View All Premises</a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="Inspection" asp-action="Index" class="btn btn-outline-dark w-100">View All Inspections</a>
+    </div>
+    <div class="col-md-4">
+        <a asp-controller="FollowUp" asp-action="Index" class="btn btn-outline-dark w-100">View All Follow-Ups</a>
+    </div>
+</div>

@@ -1,0 +1,85 @@
+@model FoodSafetyTracker.Models.Inspection
+@{
+    ViewData["Title"] = "Inspection Details";
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>🔍 Inspection #@Model.Id</h1>
+    @if (User.IsInRole("Admin") || User.IsInRole("Inspector"))
+    {
+        <a asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Edit</a>
+    }
+</div>
+
+<div class="card mb-4">
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3">Premises</dt>
+            <dd class="col-sm-9">
+                <a asp-controller="Premises" asp-action="Details" asp-route-id="@Model.PremisesId">@Model.Premises?.Name</a>
+            </dd>
+            <dt class="col-sm-3">Date</dt>
+            <dd class="col-sm-9">@Model.InspectionDate.ToString("dd/MM/yyyy")</dd>
+            <dt class="col-sm-3">Score</dt>
+            <dd class="col-sm-9">@Model.Score / 100</dd>
+            <dt class="col-sm-3">Outcome</dt>
+            <dd class="col-sm-9">
+                <span class="badge @(Model.Outcome == FoodSafetyTracker.Models.OutcomeResult.Fail ? "bg-danger" : "bg-success") fs-6">
+                    @Model.Outcome
+                </span>
+            </dd>
+            <dt class="col-sm-3">Notes</dt>
+            <dd class="col-sm-9">@(Model.Notes ?? "—")</dd>
+        </dl>
+    </div>
+</div>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Follow-Ups</h3>
+    @if (User.IsInRole("Admin") || User.IsInRole("Inspector"))
+    {
+        <a asp-controller="FollowUp" asp-action="Create" asp-route-inspectionId="@Model.Id" class="btn btn-success btn-sm">+ Add Follow-Up</a>
+    }
+</div>
+
+@if (Model.FollowUps.Any())
+{
+    <table class="table table-striped">
+        <thead class="table-dark">
+            <tr>
+                <th>Due Date</th>
+                <th>Status</th>
+                <th>Closed Date</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var f in Model.FollowUps)
+            {
+                var isOverdue = f.DueDate < DateTime.Now && f.Status == FoodSafetyTracker.Models.FollowUpStatus.Open;
+                <tr class="@(isOverdue ? "table-danger" : "")">
+                    <td>@f.DueDate.ToString("dd/MM/yyyy") @(isOverdue ? "⚠️" : "")</td>
+                    <td>
+                        <span class="badge @(f.Status == FoodSafetyTracker.Models.FollowUpStatus.Open ? "bg-warning text-dark" : "bg-success")">
+                            @f.Status
+                        </span>
+                    </td>
+                    <td>@(f.ClosedDate?.ToString("dd/MM/yyyy") ?? "—")</td>
+                    <td>
+                        @if (f.Status == FoodSafetyTracker.Models.FollowUpStatus.Open &&
+                             (User.IsInRole("Admin") || User.IsInRole("Inspector")))
+                        {
+                            <a asp-controller="FollowUp" asp-action="Close" asp-route-id="@f.Id" class="btn btn-sm btn-success">Close</a>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p class="text-muted">No follow-ups for this inspection.</p>
+}
+
+<a asp-action="Index" class="btn btn-outline-secondary mt-3">Back to Inspections</a>

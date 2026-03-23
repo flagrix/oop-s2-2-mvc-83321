@@ -1,0 +1,23 @@
+@model FoodSafetyTracker.Models.Inspection
+@{
+    ViewData["Title"] = "Delete Inspection";
+}
+
+<h1 class="mb-4">🗑️ Delete Inspection</h1>
+
+<div class="alert alert-danger">
+    Are you sure you want to delete inspection #@Model.Id for <strong>@Model.Premises?.Name</strong>?
+</div>
+
+<dl class="row">
+    <dt class="col-sm-3">Date</dt><dd class="col-sm-9">@Model.InspectionDate.ToString("dd/MM/yyyy")</dd>
+    <dt class="col-sm-3">Score</dt><dd class="col-sm-9">@Model.Score</dd>
+    <dt class="col-sm-3">Outcome</dt><dd class="col-sm-9">@Model.Outcome</dd>
+</dl>
+
+<form asp-action="Delete" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Id" />
+    <button type="submit" class="btn btn-danger">Yes, Delete</button>
+    <a asp-action="Index" class="btn btn-outline-secondary">Cancel</a>
+</form>
